@@ -93,7 +93,14 @@ def load_data(city, month, day):
     if day != 'all':
         day_number = days_list.index(day)
         df = df[df["day_of_week"] == day_number]
-    print(df)
+    
+    current_line = 0
+    raw_data = input("Do you want to take a look at the raw data?")
+    
+    while (raw_data == 'yes'):
+        print(df.loc[current_line:current_line + 5])
+        current_line += 6
+        raw_data = input("Do you want to look at more lines?")
     return df
     
 
@@ -153,12 +160,12 @@ def trip_duration_stats(df):
     # display total travel time
     total_travel_time = df['Trip Duration'].sum()
     print("The total cumulative duration of travel is: " )
-    print(total_travel_time)
+    print(str(total_travel_time) + " seconds")
 
     # display mean travel time
     average_travel_time = df['Trip Duration'].mean()
     print("The average duration of a trip is: " )
-    print(average_travel_time)
+    print(str(average_travel_time) + " seconds")
 
 
     print("\nThis took %s seconds." % (time.time() - start_time))
