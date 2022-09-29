@@ -1,5 +1,6 @@
 #(from tarfile import _Bz2ReadableFileobj
 import time
+from time import sleep
 import pandas as pd
 import numpy as np
 
@@ -104,7 +105,7 @@ def time_stats(df):
 
     # display the most common month
     frequent_month = df['month'].mode()[0]
-    print("The most frequent month for travels is: \n " + months_list[frequent_month - 1])
+    print("The most frequent month for travels is: \n" + months_list[frequent_month - 1])
 
     # display the most common day of week
     frequent_day = df['day_of_week'].mode()[0]
@@ -112,7 +113,7 @@ def time_stats(df):
 
     # display the most common start hour
     frequent_hour = df['hour'].mode()[0]
-    print("The most frequent hour is: " )
+    print("The most frequent hour is: ")
     print(frequent_hour)
 
     print("\nThis took %s seconds." % (time.time() - start_time))
@@ -127,17 +128,17 @@ def station_stats(df):
 
     # display most commonly used start station
     frequent_start_station = df['Start Station'].mode()[0]
-    print("The most popular starting station is: \n" + frequent_start_station)
+    print("The most popular starting station is: " + frequent_start_station)
 
     # display most commonly used end station
     frequent_end_station = df['End Station'].mode()[0]
-    print("The most popular end station is: \n" + frequent_end_station)
+    print("The most popular end station is: " + frequent_end_station)
 
 
     # display most frequent combination of start station and end station trip
     df['start_end'] = df['Start Station'] + ' and ' + df["End Station"]
     frequent_start_end = df['start_end'].mode()[0]
-    print("The most popular combination of starting station and end station is: \n" + frequent_start_end)
+    print("The most popular combination of starting station and end station is: " + frequent_start_end)
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
@@ -151,12 +152,12 @@ def trip_duration_stats(df):
 
     # display total travel time
     total_travel_time = df['Trip Duration'].sum()
-    print("The total cumulative duration of travel is: \n" )
+    print("The total cumulative duration of travel is: " )
     print(total_travel_time)
 
     # display mean travel time
     average_travel_time = df['Trip Duration'].mean()
-    print("The average duration of a trip is: \n" )
+    print("The average duration of a trip is: " )
     print(average_travel_time)
 
 
@@ -164,7 +165,7 @@ def trip_duration_stats(df):
     print('-'*40)
 
 
-def user_stats(df):
+def user_stats(df, city):
     """Displays statistics on bikeshare users."""
 
     print('\nCalculating User Stats...\n')
@@ -172,26 +173,26 @@ def user_stats(df):
 
     # Display counts of user types
     user_types = df['User Type'].value_counts()
-    print("The users are of these types:\n")
+    print("The users are of these types:")
     print(user_types)
 
 
-    # Display counts of gender
-    genders = df["Gender"].value_counts()
-    print("the distribution between the genders is:\n ")
-    print(genders)
-
-
-    # Display earliest, most recent, and most common year of birth
-    oldest = df['Birth Year'].min()
-    youngest = df['Birth Year'].max()
-    common_birth = df['Birth Year'].mode()[0]
-    print("The oldest person was born in: \n" )
-    print(int(oldest))
-    print("The youngest person was born in: \n" )
-    print(int(youngest))
-    print("The most common birth year is: \n" )
-    print( int(common_birth))
+    # the gender and birth year is only present in the dfs for chicago and new york city
+    if(city != 'washington'):
+        genders = df["Gender"].value_counts()
+        print("the distribution between the genders is: ")
+        print(genders)
+        
+        # Display earliest, most recent, and most common year of birth
+        oldest = df['Birth Year'].min()
+        youngest = df['Birth Year'].max()
+        common_birth = df['Birth Year'].mode()[0]
+        print("The oldest person was born in: " )
+        print(int(oldest))
+        print("The youngest person was born in: " )
+        print(int(youngest))
+        print("The most common birth year is: " )
+        print( int(common_birth))
 
 
     print("\nThis took %s seconds." % (time.time() - start_time))
@@ -202,11 +203,17 @@ def main():
     while True:
         city, month, day = get_filters()
         df = load_data(city, month, day)
-
+    	
+        #added sleep between every function call to give the user some time to read the data. 
+        sleep(3)
         time_stats(df)
+        sleep(3)
         station_stats(df)
+        sleep(3)
         trip_duration_stats(df)
-        user_stats(df)
+        sleep(3)
+        user_stats(df, city)
+        sleep(3)
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
